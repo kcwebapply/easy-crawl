@@ -8,9 +8,6 @@ import (
 
 func main() {
 	fmt.Println("test")
-	crawler := EasyCrawler{}
+	crawler := EasyCrawler{DepthCounter: 3}
 	crawler.Crawl("http://spring-boot-reference.jp/")
-
-	fmt.Println("------")
-	fmt.Println(crawler.ReadUrlList)
 }
