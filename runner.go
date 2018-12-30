@@ -9,8 +9,13 @@ import (
 func main() {
 	fmt.Println("test")
 	crawler := EasyCrawler{}
-	crawler.Crawl("http://spring-boot-reference.jp/")
+	crawler.Crawl(10, "http://spring-boot-reference.jp/")
 
 	fmt.Println("------")
-	fmt.Println(crawler.ReadUrlList)
+
+	/*for i := 0; i < 10; i++ {
+		url := crawler.ReadUrlList[i]
+		fmt.Println("対象urlは", url)
+		//crawler.Crawl(url)
+	}*/
 }
