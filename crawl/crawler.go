@@ -19,25 +19,41 @@ type EasyCrawler struct {
 func (crawler *EasyCrawler) Crawl(depth int, u string) {
 
 	depthCountChanel := make(chan bool)
-	crawler.crawl(u, depthCountChanel)
+	content := Content{Url: u, Urls: []string{u}, Body: ""}
+	crawler.crawl(content, depthCountChanel)
 }
 
-func (crawler *EasyCrawler) crawl(u string, d chan bool) {
+func (crawler *EasyCrawler) crawl(content Content, d chan bool) {
+	// 諸々初期実装。深さカウンターを+1した。
 	start := time.Now()
-
 	c := make(chan Content)
-
-	var content Content = <-c
 	crawler.depth_counter++
-	fmt.Println(crawler.depth_counter, "週目！ 長さは", len(content.Urls))
-	for _, url := range content.Urls {
+	fmt.Println(crawler.depth_counter, "週目！Hostは ", content.Url, " 長さは", len(content.Urls))
+
+	// goroutineで並列でコンテンツ取得
+	newURLList := crawler.newURLList(content.Urls)
+	for _, url := range newURLList {
+		fmt.Println("新url:", url)
 		go crawler.getContentFromUrl(url, c)
 	}
-	crawler.saveHost(u)
 
+	// 並列取得したコンテンツ郡を取得済みホストに保存し、Contentに変換。
+	contentList := []Content{}
+	for i := 0; i < len(newURLList); i++ {
+		content := <-c
+		contentList = append(contentList, content)
+		//fmt.Println("取得コンテンツUrl:", content.Url)
+		crawler.saveHost(content.Url)
+	}
+	// 終了処理。実行時間を記述。
 	end := time.Now()
 	fmt.Printf("実行時間%f秒\n", (end.Sub(start)).Seconds())
-	crawler.crawl(u, d)
+
+	// 取得したcontent一覧毎に、crawlを行う。
+	for _, value := range contentList {
+		crawler.crawl(value, d)
+	}
+	//crawler.crawl(u, d)
 }
 
 func (crawler *EasyCrawler) getContentFromUrl(u string, c chan Content) {
@@ -81,13 +97,30 @@ func (crawler *EasyCrawler) getContentFromUrl(u string, c chan Content) {
 	c <- Content{Url: baseUrl.String(), Urls: urls, Body: html}
 }
 
-func (crawler *EasyCrawler) saveHost(u string) {
+func (crawler *EasyCrawler) crawlChecked(u string) bool {
 	for _, v := range crawler.ReadUrlList {
 		if u == v {
-			return
+			return true
 		}
 	}
-	crawler.ReadUrlList = append(crawler.ReadUrlList, u)
+	return false
+}
+
+func (crawler *EasyCrawler) newURLList(urlList []string) []string {
+	newURLList := []string{}
+	for _, url := range urlList {
+		if !crawler.crawlChecked(url) {
+			newURLList = append(newURLList, url)
+		}
+	}
+	return newURLList
+}
+
+func (crawler *EasyCrawler) saveHost(u string) {
+	if !crawler.crawlChecked(u) {
+		//fmt.Println("このurlを保存しました", u)
+		crawler.ReadUrlList = append(crawler.ReadUrlList, u)
+	}
 }
 
 func (crawler *EasyCrawler) SetCallBack() {
