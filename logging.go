@@ -7,7 +7,7 @@ type Logging struct {
 }
 
 func (logging *Logging) logCrawlDone(url string) {
-	if !logging.logging || &url == nil {
+	if !logging.logging {
 		return
 	}
 	fmt.Println("crawl url : ", url)
