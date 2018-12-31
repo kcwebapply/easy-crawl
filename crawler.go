@@ -49,6 +49,9 @@ func (crawler *EasyCrawler) crawl(contentList []Content, internalDEPTHCounter *i
 	newContentList := []Content{}
 	for i := 0; i < len(newURLList); i++ {
 		content := <-c
+		if content.Url == "" {
+			continue
+		}
 		crawler.logger.logCrawlDone(content.Url)
 		crawler.callBackInterface.Callback(content.Url, content.Urls, content.Body)
 		newContentList = append(newContentList, content)
@@ -117,13 +120,25 @@ func (crawler *EasyCrawler) crawlChecked(u string) bool {
 
 func (crawler *EasyCrawler) newURLList(contentList []Content) []string {
 	urlList := []string{}
+	urlSetList := []string{}
 	newURLList := []string{}
+	// get all url contained in all contents
 	for _, content := range contentList {
 		for _, url := range content.Urls {
 			urlList = append(urlList, url)
 		}
 	}
+	// delete duplicate url
+	m := make(map[string]struct{})
 	for _, url := range urlList {
+		// check
+		if _, ok := m[url]; !ok {
+			m[url] = struct{}{}
+			urlSetList = append(urlSetList, url)
+		}
+	}
+
+	for _, url := range urlSetList {
 		if !crawler.crawlChecked(url) {
 			newURLList = append(newURLList, url)
 		}
