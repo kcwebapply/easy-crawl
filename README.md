@@ -5,6 +5,23 @@
 
 easy-crawl is library for crawling smoothly and set callback method easily.
 
+## Installation
+
+To install easy-crawl package, you need to install Go and set your Go workspace first.
+
+1. Download and install it:
+
+```sh
+$ go get -u github.com/kcwebapply/easy-crawl
+```
+
+2. Import it in your code:
+
+```go
+import "github.com/kcwebapply/easy-crawl"
+```
+
+
 ## Usage 
 ```Go
 func main() {
