@@ -7,7 +7,7 @@ type Logging struct {
 }
 
 func (logging *Logging) logCrawlDone(url string) {
-	if !logging.logging {
+	if !logging.logging || &url == nil {
 		return
 	}
 	fmt.Println("crawl url : ", url)
@@ -17,12 +17,12 @@ func (logging *Logging) logDepth(depthCounter int, urlNum int) {
 	if !logging.logging {
 		return
 	}
-	fmt.Println(depthCounter, "週目！", " 長さは", urlNum)
+	fmt.Println("depth : ", depthCounter, " numberOfContents : ", urlNum)
 }
 
 func (logging *Logging) logTime(time float64) {
 	if !logging.logging {
 		return
 	}
-	fmt.Printf("実行時間%f秒\n", time)
+	fmt.Printf("crawling done.  %f seconds\n", time)
 }

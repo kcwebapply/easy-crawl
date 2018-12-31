@@ -45,7 +45,7 @@ func (crawler *EasyCrawler) crawl(contentList []Content, internalDEPTHCounter *i
 		go crawler.getContentFromUrl(url, c)
 	}
 
-	// 並列取得したコンテンツ郡を取得済みホストに保存し、Contentに変換。
+	// receive Content and call `Callback` method, and save ContentData in crawled List.
 	newContentList := []Content{}
 	for i := 0; i < len(newURLList); i++ {
 		content := <-c
@@ -54,10 +54,11 @@ func (crawler *EasyCrawler) crawl(contentList []Content, internalDEPTHCounter *i
 		newContentList = append(newContentList, content)
 		crawler.saveHost(content.Url)
 	}
-	// 終了処理。実行時間を記述。
+	// time logging
 	end := time.Now()
 	crawler.logger.logTime((end.Sub(start)).Seconds())
 
+	// recursive crawling.
 	if crawler.Depth > *internalDEPTHCounter {
 		crawler.crawl(newContentList, internalDEPTHCounter)
 	}
@@ -65,7 +66,6 @@ func (crawler *EasyCrawler) crawl(contentList []Content, internalDEPTHCounter *i
 
 func (crawler *EasyCrawler) getContentFromUrl(u string, c chan Content) {
 	var urls = []string{}
-
 	baseUrl, urlParseError := url.Parse(u)
 	if urlParseError != nil {
 		//fmt.Println("url parse error:", urlParseError)
@@ -103,7 +103,6 @@ func (crawler *EasyCrawler) getContentFromUrl(u string, c chan Content) {
 			}
 		}
 	})
-	time.Sleep(1 * time.Second)
 	c <- Content{Url: baseUrl.String(), Urls: urls, Body: html}
 }
 
