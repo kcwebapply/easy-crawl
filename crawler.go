@@ -1,7 +1,7 @@
-package crawl
+package easyCrawl
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 	"net/url"
 	"time"
@@ -14,25 +14,34 @@ type EasyCrawler struct {
 
 	readUrlList       []string
 	callBackInterface CallBackInterface
+	logger            Logging
 }
 
-func (crawler *EasyCrawler) Crawl(u string) {
+func (crawler *EasyCrawler) Crawl(u string) error {
+	if crawler.callBackInterface == nil {
+		return errors.New("please implements CallBackInterface and set that object by `SetCallBack` method.")
+	}
+
+	if &crawler.logger == nil {
+		crawler.logger = Logging{logging: false}
+	}
+
 	var internalDEPTHCounter = 0
 	content := Content{Url: u, Urls: []string{u}, Body: ""}
 	crawler.crawl([]Content{content}, &internalDEPTHCounter)
+	return nil
 }
 
 func (crawler *EasyCrawler) crawl(contentList []Content, internalDEPTHCounter *int) {
-	// 諸々初期実装。深さカウンターを+1した。
+	// initialize
 	start := time.Now()
 	c := make(chan Content)
 	*internalDEPTHCounter++
 	newURLList := crawler.newURLList(contentList)
-	fmt.Println(*internalDEPTHCounter, "週目！", " 長さは", len(newURLList))
+	crawler.logger.logDepth(*internalDEPTHCounter, len(newURLList))
 
-	// goroutineで並列でコンテンツ取得
+	// get contents parallel
 	for _, url := range newURLList {
-		//fmt.Println("新url:", url)
 		go crawler.getContentFromUrl(url, c)
 	}
 
@@ -40,14 +49,14 @@ func (crawler *EasyCrawler) crawl(contentList []Content, internalDEPTHCounter *i
 	newContentList := []Content{}
 	for i := 0; i < len(newURLList); i++ {
 		content := <-c
-		fmt.Println("callBack", crawler.callBackInterface)
+		crawler.logger.logCrawlDone(content.Url)
 		crawler.callBackInterface.Callback(content.Url, content.Urls, content.Body)
 		newContentList = append(newContentList, content)
 		crawler.saveHost(content.Url)
 	}
 	// 終了処理。実行時間を記述。
 	end := time.Now()
-	fmt.Printf("実行時間%f秒\n", (end.Sub(start)).Seconds())
+	crawler.logger.logTime((end.Sub(start)).Seconds())
 
 	if crawler.Depth > *internalDEPTHCounter {
 		crawler.crawl(newContentList, internalDEPTHCounter)
@@ -130,7 +139,9 @@ func (crawler *EasyCrawler) saveHost(u string) {
 }
 
 func (crawler *EasyCrawler) SetCallBack(callBackInterface CallBackInterface) {
-	//callBackInterface.Callback("", []string{}, "")
 	crawler.callBackInterface = callBackInterface
-	fmt.Println("set CallBack!")
+}
+
+func (crawler *EasyCrawler) SetLogging(enabled bool) {
+	crawler.logger = Logging{logging: enabled}
 }

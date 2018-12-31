@@ -1,4 +1,4 @@
-package crawl
+package easyCrawl
 
 type Content struct {
 	Url  string
