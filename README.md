@@ -10,12 +10,15 @@ easy-crawl is library for crawling smoothly and set callback method easily.
 func main() {
   // initialize `Easycrawler` with crawling depth.
   crawler := easyCrawl.EasyCrawler{Depth: 3} 
+  
+  // you should implements `CallBackInterface` and set it in SetCallBack method. 
+  //`CallBack` method is called when crawler get html contents by request .
   callBackImpl := CallBackImpl{}  
-  /* you should implements `CallBackInterface` and set it in SetCallBack method. 
-     `CallBack` method is called when crawler get html contents by request .*/
   crawler.SetCallBack(callBackImpl)
+  
   // you can monitor how crawling is being done by call `SetLogging` and set `true`.
   crawler.SetLogging(true)
+  
   // crawling!
   crawler.Crawl("http://spring-boot-reference.jp/")
 }
