@@ -1,8 +1,9 @@
 # easy-crawl
 ![Go](https://img.shields.io/badge/Language-Go-6699FF.svg)
-![apache licensed](https://img.shields.io/badge/License-Apache_2.0-d94c32.svg)
+[![GoDoc](https://godoc.org/github.com/kcwebapply/easy-crawl?status.svg)](https://godoc.org/github.com/kcwebapply/easy-crawl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kcwebapply/easy-crawl)](https://goreportcard.com/report/github.com/kcwebapply/easy-crawl)
 [![Build Status](https://travis-ci.org/kcwebapply/easy-crawl.svg)](https://travis-ci.org/kcwebapply/easy-crawl)
+![apache licensed](https://img.shields.io/badge/License-Apache_2.0-d94c32.svg)
 
 easy-crawl is library for crawling smoothly and set callback method easily.
 
