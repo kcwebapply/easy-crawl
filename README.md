@@ -23,6 +23,7 @@ import "github.com/kcwebapply/easy-crawl"
 
 
 ## Usage 
+### crawling
 ```Go
 func main() {
   // initialize Easycrawler{} with crawling depth.
@@ -46,6 +47,17 @@ type CallBackImpl struct {
 
 func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string) {
    // implements as you like . 
+}
+```
+
+### callback interface
+you should implements __CallBackInterface__ to set callback method.
+- `url` is content's base-url
+- `urls` is list of url in html body (extracted from `href` tag).
+- `body` is html body of content
+```Go
+type CallBackInterface interface {
+	Callback(url string, urls []string, body string)
 }
 ```
 
