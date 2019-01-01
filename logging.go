@@ -1,7 +1,8 @@
-package easyCrawl
+package easycrawl
 
 import "fmt"
 
+// Logging struct implements logging methods.
 type Logging struct {
 	logging bool
 }

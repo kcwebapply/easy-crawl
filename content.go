@@ -1,7 +1,8 @@
-package easyCrawl
+package easycrawl
 
+// Content is struct of html contents
 type Content struct {
-	Url  string
+	URL  string
 	Urls []string
 	Body string
 }
