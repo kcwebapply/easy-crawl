@@ -20,5 +20,5 @@ type CallBackImpl struct {
 
 // Callback method is example of  callback method
 func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string) {
-	fmt.Println("callBack Method Called! : ", url, body)
+	fmt.Println("callBack Method Called! : ", url)
 }
