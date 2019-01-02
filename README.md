@@ -69,4 +69,10 @@ func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string
 ```
 
 ## Demo
+you can try crawling running this go file.
+```
+go run example/crawl.go
+```
+
+
 ![sample-demo](example/image/demo-image.gif)
