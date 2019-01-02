@@ -28,13 +28,14 @@ import "github.com/kcwebapply/easy-crawl"
 ### crawling
 ```Go
 func main() {
+
   // initialize Easycrawler{} with crawling depth.
   crawler := easyCrawl.EasyCrawler{Depth: 3} 
   
+  
   // you should implements CallBackInterface and set it in SetCallBack() method. 
-  // CallBack() method is called when crawler get html contents by request .
-  callBackImpl := CallBackImpl{}  
-  crawler.SetCallBack(callBackImpl)
+  crawler.SetCallBack(CallBackImpl{})
+  
   
   // you can monitor how crawling is being done by call SetLogging() and set `true`.
   crawler.SetLogging(true)
@@ -44,12 +45,6 @@ func main() {
 }
 
 
-type CallBackImpl struct {
-}
-
-func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string) {
-   // implements as you like . 
-}
 ```
 
 ### callback interface
@@ -62,4 +57,15 @@ type CallBackInterface interface {
 	Callback(url string, urls []string, body string)
 }
 ```
+
+Here is the example of implementing of __CallBackInterface__
+```Go
+type CallBackImpl struct {
+}
+
+func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string) {
+   // implements as you like . 
+}
+```
+
 
