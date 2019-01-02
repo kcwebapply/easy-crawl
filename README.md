@@ -24,22 +24,22 @@ import "github.com/kcwebapply/easy-crawl"
 ```
 
 
-## Usage 
+## Usage
 ### crawling
 ```Go
 func main() {
 
   // initialize Easycrawler{} with crawling depth.
-  crawler := easyCrawl.EasyCrawler{Depth: 3} 
-  
-  
-  // you should implements CallBackInterface and set it in SetCallBack() method. 
+  crawler := easyCrawl.EasyCrawler{Depth: 3}
+
+
+  // you should implements CallBackInterface and set it in SetCallBack() method.
   crawler.SetCallBack(CallBackImpl{})
-  
-  
+
+
   // you can monitor how crawling is being done by call SetLogging() and set `true`.
   crawler.SetLogging(true)
-  
+
   // crawling!
   crawler.Crawl("http://spring-boot-reference.jp/")
 }
@@ -64,8 +64,9 @@ type CallBackImpl struct {
 }
 
 func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string) {
-   // implements as you like . 
+   // implements as you like .
 }
 ```
 
-
+## Demo
+![sample-demo](image/demo-image.gif)
