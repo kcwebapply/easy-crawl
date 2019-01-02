@@ -69,4 +69,4 @@ func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string
 ```
 
 ## Demo
-![sample-demo](image/demo-image.gif)
+![sample-demo](example/image/demo-image.gif)
