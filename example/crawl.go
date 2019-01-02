@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	easycrawl "github.com/kcwebapply/easy-crawl"
 )
 
@@ -8,7 +10,7 @@ func main() {
 	crawler := easycrawl.EasyCrawler{Depth: 3}
 	callBackImpl := CallBackImpl{}
 	crawler.SetCallBack(callBackImpl)
-	crawler.SetLogging(true)
+	crawler.SetLogging(false)
 	crawler.Crawl("http://spring-boot-reference.jp/")
 }
 
@@ -18,5 +20,5 @@ type CallBackImpl struct {
 
 // Callback method is example of  callback method
 func (callbackImpl CallBackImpl) Callback(url string, urls []string, body string) {
-	//fmt.Println("callBack Method Called! : ", url)
+	fmt.Println("callBack Method Called! : ", url)
 }
